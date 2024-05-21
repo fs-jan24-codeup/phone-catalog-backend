@@ -8,8 +8,9 @@
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
-    "format": "prettier --write ."
+    "fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix && prettier --write .",
+    "format": "prettier --write .",
+    "prepare": "husky install"
   },
   "author": "CodeUp",
   "license": "ISC",
@@ -32,9 +33,13 @@
     "typescript": "^5.4.5"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,json,md}": [
-      "prettier --write",
-      "eslint --fix"
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.tsx": [
+      "eslint --fix",
+      "prettier --write"
     ]
   },
   "husky": {
