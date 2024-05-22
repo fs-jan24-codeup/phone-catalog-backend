@@ -1,10 +1,4 @@
-export interface User {
-  id: number;
-  carColorId: number;
-  name: string;
-}
-
-export interface Color {
+export interface Product {
   id: number;
   name: string;
 }
