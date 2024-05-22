@@ -13,7 +13,7 @@
     "prepare": "husky install"
   },
   "prisma": {
-"seed":"ts-node prisma/seed.ts"
+    "seed": "ts-node prisma/seed.ts"
   },
   "author": "CodeUp",
   "license": "ISC",
