@@ -1,7 +1,11 @@
 import express, { Request, Response } from 'express';
 import { Product } from './types/Product';
+import cors from 'cors';
+import { Status } from './types/constants';
 
 const app = express();
+
+app.use(cors({ origin: '*' }));
 
 app.get('/', (req: Request, res: Response) => {
   res.json({ test: 'Ok' });
@@ -28,13 +32,15 @@ app.get('/home', (req: Request, res: Response) => {
   const phones = products.filter(phone => phone.category === 'phones');
 
   if (!phones.length) {
-    res.status(404).json({ error: 'Phones not found' });
+    res.status(Status.NOT_FOUND).json({ error: 'Phones not found' });
   }
 
-  res.json(phones);
+  res.statusCode = Status.OK;
+  res.send(phones);
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
   console.log('server has started on port');
   console.log('http://localhost:' + PORT);
