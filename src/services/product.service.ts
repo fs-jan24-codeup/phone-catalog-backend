@@ -2,16 +2,34 @@ import { Product } from '@prisma/client';
 
 import prisma from '../db.ts';
 
-export const getAll = async (): Promise<Product[]> => {
-  const result = await prisma.product.findMany();
+export const getAll = async (
+  limit: number,
+  sortBy: string,
+): Promise<Product[]> => {
+  const result = await prisma.product.findMany({
+    take: limit,
+    orderBy: {
+      [sortBy]: 'asc',
+    },
+  });
   return result;
 };
 
 export async function getOne(itemId: string): Promise<Product | null> {
   return prisma.product.findUnique({
     where: { itemId },
-    include: {
-      productDetails: true,
+  });
+}
+
+export async function getRecommended(itemId: string): Promise<Product[]> {
+  const product = await getOne(itemId);
+  if (!product) {
+    return [];
+  }
+  return prisma.product.findMany({
+    where: {
+      category: product.category,
+      id: { not: product.id },
     },
   });
 }
