@@ -7,23 +7,38 @@ export const getAll = async (): Promise<Product[]> => {
   return result;
 };
 
-export const normalize = (product: Product): Product => {
-  const { id, name, category, itemId, fullPrice, price, image } = product;
-  return { id, name, category, itemId, fullPrice, price, image };
+export const normalize = (product: Partial<Product>): Partial<Product> => {
+  const { id, name, category } = product;
+  return { id, name, category };
 };
 
 export async function getOne(id: number): Promise<Product | null> {
   return prisma.product.findUnique({
-    where: { id },
+    where: { id: id.toString() },
   });
 }
 
-export async function createOne(data: Omit<Product, 'id'>): Promise<Product> {
-  const newProduct = await prisma.product.create({
-    data: data,
+export async function getRecommended(id: number): Promise<Product[]> {
+  const product = await getOne(id);
+
+  if (!product) {
+    return [];
+  }
+
+  return prisma.product.findMany({
+    where: {
+      category: product.category,
+      id: { not: product.id },
+    },
   });
-  return newProduct;
 }
+
+//export async function createOne(data: Omit<Product, 'id'>): Promise<Product> {
+//  const newProduct = await prisma.product.create({
+//    data: data,
+//  });
+//  return newProduct;
+//}
 
 // }
 // const newProduct = await prisma.product.create({
@@ -61,20 +76,20 @@ export async function createOne(data: Omit<Product, 'id'>): Promise<Product> {
 //   }
 // });
 
-export async function updateOne(
-  id: number,
-  updateData: Partial<Product>,
-): Promise<Product | null> {
-  await prisma.product.update({
-    where: { id },
-    data: updateData,
-  });
-  return getOne(id);
-}
+//export async function updateOne(
+//  id: number,
+//  updateData: Partial<Product>,
+//): Promise<Product | null> {
+//  await prisma.product.update({
+//    where: { id },
+//    data: updateData,
+//  });
+//  return getOne(id);
+//}
 
-export async function deleteOne(id: number): Promise<boolean> {
-  await prisma.product.delete({
-    where: { id },
-  });
-  return true;
-}
+//export async function deleteOne(id: number): Promise<boolean> {
+//  await prisma.product.delete({
+//    where: { id },
+//  });
+//  return true;
+//}

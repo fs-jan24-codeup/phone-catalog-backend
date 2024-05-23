@@ -20,25 +20,31 @@ export const getOne = async (req: Request, res: Response) => {
   res.send(productService.normalize(product));
 };
 
-export const create = async (req: Request, res: Response) => {
-  const { itemId, name, category, fullPrice, price, image } = req.body;
-  try {
-    const newProduct = await productService.createOne({
-      itemId,
-      name,
-      category,
-      fullPrice,
-      price,
-      image,
-    });
-    res.status(Status.CREATED).send(newProduct);
-  } catch (error) {
-    console.error('Error creating product:', error);
-    res
-      .status(Status.INTERNAL_SERVER_ERROR)
-      .json({ message: 'Error creating product' });
-  }
+export const getRecommended = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const products = await productService.getRecommended(+id);
+  res.send(products);
 };
+
+//export const create = async (req: Request, res: Response) => {
+//  const { itemId, name, category, fullPrice, price, image } = req.body;
+//  try {
+//    const newProduct = await productService.createOne({
+//      itemId,
+//      name,
+//      category,
+//      fullPrice,
+//      price,
+//      image,
+//    });
+//    res.status(Status.CREATED).send(newProduct);
+//  } catch (error) {
+//    console.error('Error creating product:', error);
+//    res
+//      .status(Status.INTERNAL_SERVER_ERROR)
+//      .json({ message: 'Error creating product' });
+// }
+//};
 
 // export const remove = async (req: Request, res: Response) => {
 //   const { id } = req.params;
