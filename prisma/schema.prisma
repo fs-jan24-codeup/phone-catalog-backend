@@ -20,7 +20,13 @@ model Product {
   category           String
   fullPrice          Float
   price              Float
+  screen             String?
+  capacity           String?
+  color              String?
+  ram                String?
+  year               Int?
   image              String
+
   // details            ProductDetails[]
 }
 
