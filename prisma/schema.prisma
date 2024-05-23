@@ -14,31 +14,61 @@ datasource db {
 }
 
 model Product {
-  id                String          @id
-  category          String
-  namespaceId       String
-  name              String
-  capacityAvailable String[]
-  capacity          String
-  priceRegular      Int
-  priceDiscount     Int
-  colorsAvailable   String[]
-  color             String
-  images            String[]
-  description       String[]
-  screen            String
-  resolution        String
-  processor         String
-  ram               String
-  camera            String
-  zoom              String
-  productInfo       ProductInfo[]
+  id                 Int              @id @default(autoincrement())
+  itemId             String           @unique
+  name               String
+  category           String
+  fullPrice          Float
+  price              Float
+  screen             String?
+  capacity           String?
+  color              String?
+  ram                String?
+  year               Int?
+  image              String
+
+  // details            ProductDetails[]
 }
 
-model ProductInfo {
-  id        Int        @id @default(autoincrement())
+// model ProductDetails {
+//   id                 String           @id
+//   productId          Int              
+//   namespaceId        String
+//   category           String
+//   name               String
+//   capacityAvailable  String[]
+//   capacity           String
+//   priceRegular       Float
+//   priceDiscount      Float
+//   colorsAvailable    String[]
+//   color              String
+//   images             String[]
+//   description        Json            
+//   screen             String
+//   resolution         String
+//   processor          String
+//   ram                String
+//   camera             String
+//   zoom               String
+//   cell               String[]
+//   Product            Product          @relation(fields: [productId], references: [id])
+// }
+
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
+  posts Post[]
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   title     String
-  text      String[] 
-  productId String
-  product   Product    @relation(fields: [productId], references: [id])
+  content   String?
+  published Boolean  @default(false)
+  viewCount Int      @default(0)
+  author    User?    @relation(fields: [authorId], references: [id])
+  authorId  Int?
 }

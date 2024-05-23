@@ -1,45 +1,35 @@
-import { PrismaProduct } from '../models/Product.model';
-import { Product } from '../types/types.js';
+import { Product } from '@prisma/client';
 
-const normalize = ({ id, name }: Product): Product => {
-  return { id, name };
-};
+import prisma from '../db.ts';
 
-async function getAll(): Promise<Product[]> {
-  const result = await PrismaProduct.findMany();
-
+export const getAll = async (
+  limit: number,
+  sortBy: string,
+): Promise<Product[]> => {
+  const result = await prisma.product.findMany({
+    take: limit,
+    orderBy: {
+      [sortBy]: 'asc',
+    },
+  });
   return result;
-}
-
-async function getOne(id: number): Promise<Product | null> {
-  return PrismaProduct.findByPk(id);
-}
-
-async function createOne({ id, name }: Product): Promise<Product> {
-  return PrismaProduct.create({ id, name });
-}
-
-async function updateOne(
-  id: number,
-  { name }: Partial<Product>,
-): Promise<Product | null> {
-  await PrismaProduct.update({ name }, { where: { id } });
-
-  return getOne(id);
-}
-
-async function deleteOne(id: number): Promise<boolean> {
-  await PrismaProduct.destroy({ where: { id } });
-
-  return true;
-}
-
-export {
-  normalize,
-  PrismaProduct,
-  getAll,
-  getOne,
-  createOne,
-  updateOne,
-  deleteOne,
 };
+
+export async function getOne(id: number): Promise<Product | null> {
+  return prisma.product.findUnique({
+    where: { id: id.toString() },
+  });
+}
+
+export async function getRecommended(id: number): Promise<Product[]> {
+  const product = await getOne(id);
+  if (!product) {
+    return [];
+  }
+  return prisma.product.findMany({
+    where: {
+      category: product.category,
+      id: { not: product.id },
+    },
+  });
+}

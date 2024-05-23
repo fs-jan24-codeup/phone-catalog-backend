@@ -2,13 +2,20 @@ import express, { Request, Response } from 'express';
 import { Product } from './types/Product';
 import cors from 'cors';
 import { Status } from './types/constants';
+import { productRouterApp } from './routes/product.routes';
+import { userRouterApp } from './routes/user.routes';
 
 const app = express();
 
 app.use(cors({ origin: '*' }));
 
+app.use(express.json());
+
+app.use('/products', productRouterApp);
+app.use('/users', userRouterApp);
+
 app.get('/', (req: Request, res: Response) => {
-  res.json({ test: 'Ok' });
+  res.send({ test: 'Ok' });
 });
 
 app.get('/home', (req: Request, res: Response) => {
