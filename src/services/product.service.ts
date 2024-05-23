@@ -15,14 +15,14 @@ export const getAll = async (
   return result;
 };
 
-export async function getOne(id: number): Promise<Product | null> {
+export async function getOne(itemId: string): Promise<Product | null> {
   return prisma.product.findUnique({
-    where: { id: id.toString() },
+    where: { itemId },
   });
 }
 
-export async function getRecommended(id: number): Promise<Product[]> {
-  const product = await getOne(id);
+export async function getRecommended(itemId: string): Promise<Product[]> {
+  const product = await getOne(itemId);
   if (!product) {
     return [];
   }
