@@ -11,7 +11,7 @@ export const getAll = async (req: Request, res: Response): Promise<void> => {
 
   try {
     const products = await productService.getAll(limit, sort);
-    res.send(products.map(prod => productService.normalize(prod)));
+    res.send(products.map(prod => prod));
   } catch (error) {
     res.status(500).send({ error: 'Failed to fetch products' });
   }
@@ -25,7 +25,7 @@ export const getOne = async (req: Request, res: Response) => {
     return res.sendStatus(Status.NOT_FOUND);
   }
 
-  res.send(productService.normalize(product));
+  res.send(product);
 };
 
 export const getRecommended = async (req: Request, res: Response) => {

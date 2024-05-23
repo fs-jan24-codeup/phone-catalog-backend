@@ -15,11 +15,6 @@ export const getAll = async (
   return result;
 };
 
-export const normalize = (product: Partial<Product>): Partial<Product> => {
-  const { id, name, category } = product;
-  return { id, name, category };
-};
-
 export async function getOne(id: number): Promise<Product | null> {
   return prisma.product.findUnique({
     where: { id: id.toString() },
