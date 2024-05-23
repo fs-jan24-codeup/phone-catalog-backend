@@ -1,11 +1,11 @@
-// import { PrismaProduct } from '../models/Product.model';
-// import { Product } from '../types/types.js';
-// import prisma from '../db';
+import { Product } from '@prisma/client';
 
-// async function getAll(): Promise<Product[]> {
-//   const result = await prisma.product.findMany();
+import prisma from '../db';
 
-//   return result;
-// }
+async function getAll(): Promise<Product[]> {
+  const result = await prisma.product.findMany();
 
-// export { getAll };
+  return result;
+}
+
+export { getAll };

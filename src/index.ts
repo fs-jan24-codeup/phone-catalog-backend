@@ -1,9 +1,8 @@
 import express, { Request, Response } from 'express';
-import { Product } from './types/Product';
 import cors from 'cors';
-import { Status } from './types/constants';
 import { productRouterApp } from './routes/product.routes';
 import { userRouterApp } from './routes/user.routes';
+import { homeRouterApp } from './routes/home.routes';
 
 const app = express();
 
@@ -13,37 +12,10 @@ app.use(express.json());
 
 app.use('/products', productRouterApp);
 app.use('/users', userRouterApp);
+app.use('/home', homeRouterApp);
 
 app.get('/', (req: Request, res: Response) => {
   res.send({ test: 'Ok' });
-});
-
-app.get('/home', (req: Request, res: Response) => {
-  const products: Product[] = [
-    {
-      id: 1,
-      category: 'phones',
-      itemId: 'apple-iphone-7-32gb-black',
-      name: 'Apple iPhone 7 32GB Black',
-      fullPrice: 400,
-      price: 375,
-      screen: "4.7' IPS",
-      capacity: '32GB',
-      color: 'black',
-      ram: '2GB',
-      year: 2016,
-      image: 'img/phones/apple-iphone-7/black/00.webp',
-    },
-  ];
-
-  const phones = products.filter(phone => phone.category === 'phones');
-
-  if (!phones.length) {
-    res.status(Status.NOT_FOUND).json({ error: 'Phones not found' });
-  }
-
-  res.statusCode = Status.OK;
-  res.send(phones);
 });
 
 const PORT = process.env.PORT || 3000;
