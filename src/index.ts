@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { productRouterApp } from './routes/product.routes';
 import { userRouterApp } from './routes/user.routes';
+import { favouritesRouterApp } from './routes/favourites.routes';
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(express.json());
 
 app.use('/products', productRouterApp);
 app.use('/users', userRouterApp);
+app.use('/favourites', favouritesRouterApp);
 
 app.get('/', (req: Request, res: Response) => {
   res.send({ test: 'Ok' });
