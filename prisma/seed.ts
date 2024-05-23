@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 import products from '../src/data/api/products.json';
 
 async function main() {
-  // await prisma.$queryRawUnsafe(`Truncate "Product" restart identity cascade;`);
+  await prisma.$queryRawUnsafe(`Truncate "Product" restart identity cascade;`);
   for (const item of products) {
     await prisma.product.create({
       data: {
@@ -14,6 +14,11 @@ async function main() {
         category: item.category,
         fullPrice: item.fullPrice,
         price: item.price,
+        screen: item.screen,
+        capacity: item.capacity,
+        color: item.color,
+        ram: item.ram,
+        year: item.year,
         image: item.image,
       },
     });
