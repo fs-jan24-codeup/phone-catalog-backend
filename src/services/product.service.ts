@@ -2,8 +2,16 @@ import { Product, PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const getAll = async (): Promise<Product[]> => {
-  const result = await prisma.product.findMany();
+export const getAll = async (
+  limit: number,
+  sortBy: string,
+): Promise<Product[]> => {
+  const result = await prisma.product.findMany({
+    take: limit,
+    orderBy: {
+      [sortBy]: 'asc',
+    },
+  });
   return result;
 };
 

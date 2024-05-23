@@ -4,9 +4,17 @@ import * as productService from '../services/product.service';
 import { Request, Response } from 'express';
 
 export const getAll = async (req: Request, res: Response): Promise<void> => {
-  const products = await productService.getAll();
+  const { perPage, sortBy } = req.query;
 
-  res.send(products);
+  const limit = parseInt(perPage as string, 10) || 10;
+  const sort = (sortBy as string) || 'name';
+
+  try {
+    const products = await productService.getAll(limit, sort);
+    res.send(products.map(prod => productService.normalize(prod)));
+  } catch (error) {
+    res.status(500).send({ error: 'Failed to fetch products' });
+  }
 };
 
 export const getOne = async (req: Request, res: Response) => {
