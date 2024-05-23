@@ -1,42 +1,44 @@
-// import { Status } from '../types/constants';
-// import * as productService from '../services/product.service';
-// import { Request, Response } from 'express';
-// import { Product } from '../types/types';
+import { Status } from '../types/constants';
+// import { Product } from '@prisma/client';
+import * as productService from '../services/product.service';
+import { Request, Response } from 'express';
 
-// export const getAll = async (req: Request, res: Response) => {
-//   const products = await productService.getAll();
-//   res.send(products.map((prod: Product) => productService.normalize(prod)));
-// };
+export const getAll = async (req: Request, res: Response): Promise<void> => {
+  const products = await productService.getAll();
 
-// export const getOne = async (req: Request, res: Response) => {
-//   const { id } = req.params;
-//   const product = await productService.getOne(id);
+  res.send(products);
+};
 
-//   if (!product) {
-//     return res.sendStatus(404);
-//   }
+export const getOne = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const product = await productService.getOne(+id);
 
-//   res.send(productService.normalize(product));
-// };
+  if (!product) {
+    return res.sendStatus(Status.NOT_FOUND);
+  }
 
-// export const create = async (req: Request, res: Response) => {
-//   const { name } = req.body;
+  res.send(productService.normalize(product));
+};
 
-//   if (!name) {
-//     return res.sendStatus(400);
-//   }
-
-//   const product = await productService.createOne({ name });
-//   res.status(Status.CREATED).send(productService.normalize(product));
-// };
-
-// export const update = async (req: Request, res: Response) => {
-//   const { id } = req.params;
-//   const { name } = req.body;
-
-//   const product = await productService.updateOne(id, { name });
-//   res.status(Status.OK).send(productService.normalize(product));
-// };
+export const create = async (req: Request, res: Response) => {
+  const { itemId, name, category, fullPrice, price, image } = req.body;
+  try {
+    const newProduct = await productService.createOne({
+      itemId,
+      name,
+      category,
+      fullPrice,
+      price,
+      image,
+    });
+    res.status(Status.CREATED).send(newProduct);
+  } catch (error) {
+    console.error('Error creating product:', error);
+    res
+      .status(Status.INTERNAL_SERVER_ERROR)
+      .json({ message: 'Error creating product' });
+  }
+};
 
 // export const remove = async (req: Request, res: Response) => {
 //   const { id } = req.params;
