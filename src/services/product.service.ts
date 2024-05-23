@@ -1,42 +1,80 @@
-// import { PrismaProduct } from '../models/Product.model';
-// import { Product } from '../types/types.js';
+import { Product, PrismaClient } from '@prisma/client';
 
-// const normalize = ({ id, name }: Product): Product => {
-//   return { id, name };
-// };
+const prisma = new PrismaClient();
 
-// async function getAll(): Promise<Product[]> {
-//   const result = await PrismaProduct.findMany();
+export const getAll = async (): Promise<Product[]> => {
+  const result = await prisma.product.findMany();
+  return result;
+};
 
-//   return result;
+export const normalize = (product: Product): Product => {
+  const { id, name, category, itemId, fullPrice, price, image } = product;
+  return { id, name, category, itemId, fullPrice, price, image };
+};
+
+export async function getOne(id: number): Promise<Product | null> {
+  return prisma.product.findUnique({
+    where: { id },
+  });
+}
+
+export async function createOne(data: Omit<Product, 'id'>): Promise<Product> {
+  const newProduct = await prisma.product.create({
+    data: data,
+  });
+  return newProduct;
+}
+
 // }
+// const newProduct = await prisma.product.create({
+//   data: {
+//     itemId: "apple-iphone-11-128gb-black",
+//     name: "Apple iPhone 11 128GB Black",
+//     category: "phones",
+//     fullPrice: 1100,
+//     price: 1050,
+//     image: "img/phones/apple-iphone-11/black/00.webp",
+//     details: {
+//       create: {
+//         namespaceId: "apple-iphone-11",
+//         capacity: "128GB",
+//         priceRegular: 1100,
+//         priceDiscount: 1050,
+//         color: "black",
+//         images: ["img/phones/apple-iphone-11/black/00.webp",
+//                  "img/phones/apple-iphone-11/black/01.webp"],
+//         description: JSON.stringify([
+//           {
+//             title: "And then there was Pro",
+//             text: ["A transformative triple-camera system..."]
+//           }
+//         ]),
+//         screen: "6.1' IPS",
+//         resolution: "1792x828",
+//         processor: "Apple A13 Bionic",
+//         ram: "4GB",
+//         camera: "12 Mp + 12 Mp + 12MP",
+//         zoom: "Digital, 5x",
+//         cell: ["GPRS", "EDGE", "UMTS", "LTE"]
+//       }
+//     }
+//   }
+// });
 
-// async function getOne(id: number): Promise<Product | null> {
-//   return PrismaProduct.findByPk(id);
-// }
+export async function updateOne(
+  id: number,
+  updateData: Partial<Product>,
+): Promise<Product | null> {
+  await prisma.product.update({
+    where: { id },
+    data: updateData,
+  });
+  return getOne(id);
+}
 
-// async function createOne({ id, name }: Product): Promise<Product> {
-//   return PrismaProduct.create({ id, name });
-// }
-
-// async function updateOne(id: number, { name }: Partial<Product>): Promise<Product | null> {
-//   await PrismaProduct.update({ name }, { where: { id } });
-
-//   return getOne(id);
-// }
-
-// async function deleteOne(id: number): Promise<boolean> {
-//   await PrismaProduct.destroy({ where: { id } });
-
-//   return true;
-// }
-
-// export {
-//   normalize,
-//   PrismaProduct,
-//   getAll,
-//   getOne,
-//   createOne,
-//   updateOne,
-//   deleteOne,
-// };
+export async function deleteOne(id: number): Promise<boolean> {
+  await prisma.product.delete({
+    where: { id },
+  });
+  return true;
+}
