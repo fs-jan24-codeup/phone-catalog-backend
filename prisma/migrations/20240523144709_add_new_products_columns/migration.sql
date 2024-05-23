@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "ProductDetails" ALTER COLUMN "camera" DROP NOT NULL,
+ALTER COLUMN "zoom" DROP NOT NULL;

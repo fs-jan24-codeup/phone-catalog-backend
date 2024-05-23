@@ -26,33 +26,30 @@ model Product {
   ram                String?
   year               Int?
   image              String
-
-  // details            ProductDetails[]
+  productDetails     ProductDetails []
 }
-
-// model ProductDetails {
-//   id                 String           @id
-//   productId          Int              
-//   namespaceId        String
-//   category           String
-//   name               String
-//   capacityAvailable  String[]
-//   capacity           String
-//   priceRegular       Float
-//   priceDiscount      Float
-//   colorsAvailable    String[]
-//   color              String
-//   images             String[]
-//   description        Json            
-//   screen             String
-//   resolution         String
-//   processor          String
-//   ram                String
-//   camera             String
-//   zoom               String
-//   cell               String[]
-//   Product            Product          @relation(fields: [productId], references: [id])
-// }
+model ProductDetails {
+  id                 String           @id
+  category           String              
+  namespaceId        String
+  name               String
+  capacityAvailable  String[]
+  capacity           String
+  priceRegular       Float
+  priceDiscount      Float
+  colorsAvailable    String[]
+  color              String
+  images             String[]
+  description        Json            
+  screen             String
+  resolution         String
+  processor          String
+  ram                String
+  camera             String?
+  zoom               String?
+  cell               String[]
+  product            Product?         @relation(fields: [id], references: [itemId])
+}
 
 model User {
   id    Int     @id @default(autoincrement())

@@ -7,8 +7,11 @@ export const getAll = async (): Promise<Product[]> => {
   return result;
 };
 
-export async function getOne(id: number): Promise<Product | null> {
+export async function getOne(itemId: string): Promise<Product | null> {
   return prisma.product.findUnique({
-    where: { id },
+    where: { itemId },
+    include: {
+      productDetails: true,
+    },
   });
 }
