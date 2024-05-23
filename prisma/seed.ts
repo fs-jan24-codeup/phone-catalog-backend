@@ -1,7 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-// const productData = require('./products.json');
 import products from '../src/data/api/products.json';
 
 async function main() {
@@ -22,14 +21,6 @@ async function main() {
         image: item.image,
       },
     });
-
-    //   for (const u of userData) {
-    //     const user = await prisma.user.create({
-    //       data: u,
-    //     })
-    //     console.log(`Created user with id: ${user.id}`)
-    //   }
-    //   console.log(`Seeding finished.`)
   }
 }
 

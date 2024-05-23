@@ -18,7 +18,7 @@ export const getAll = async (req: Request, res: Response): Promise<void> => {
 
 export const getOne = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const product = await productService.getOne(+id);
+  const product = await productService.getOne(id);
   if (!product) {
     return res.sendStatus(Status.NOT_FOUND);
   }
@@ -27,6 +27,6 @@ export const getOne = async (req: Request, res: Response) => {
 
 export const getRecommended = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const products = await productService.getRecommended(+id);
+  const products = await productService.getRecommended(id);
   res.send(products);
 };
