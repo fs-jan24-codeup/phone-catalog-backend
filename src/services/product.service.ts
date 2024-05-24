@@ -3,15 +3,20 @@ import { Product } from '@prisma/client';
 import prisma from '../db.ts';
 
 export const getAll = async (
+  page: number,
   limit: number,
   sortBy: string,
 ): Promise<Product[]> => {
+  const skip = (page - 1) * limit;
+
   const result = await prisma.product.findMany({
     take: limit,
+    skip,
     orderBy: {
       [sortBy]: 'asc',
     },
   });
+
   return result;
 };
 
