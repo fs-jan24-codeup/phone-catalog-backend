@@ -56,3 +56,11 @@ export const getPhones = async () => {
     },
   });
 };
+
+export const getAccessories = async () => {
+  return prisma.product.findMany({
+    where: {
+      category: 'accessories',
+    },
+  });
+};
