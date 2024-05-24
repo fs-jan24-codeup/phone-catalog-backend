@@ -5,14 +5,20 @@ import prisma from '../db.ts';
 export const getAll = async (
   limit: number,
   sortBy: string,
+  sortOrder: string,
+  productType: string | null,
 ): Promise<Product[]> => {
+  const where = productType ? { category: productType } : {};
+
   const result = await prisma.product.findMany({
     take: limit,
     orderBy: {
-      [sortBy]: 'asc',
+      [sortBy]: sortOrder,
     },
+    where,
   });
-  return result;
+
+  return result.length ? result : [];
 };
 
 export async function getOne(itemId: string): Promise<Product | null> {
