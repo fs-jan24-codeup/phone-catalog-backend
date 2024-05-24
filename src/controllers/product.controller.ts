@@ -62,3 +62,39 @@ export const getPhones = async (req: Request, res: Response) => {
       .send({ error: 'Failed to fetch phones' });
   }
 };
+
+export const getTablets = async (req: Request, res: Response) => {
+  const { page = 1, perPage = 10, sortBy = 'name' } = req.query;
+
+  try {
+    const products = await productService.getAll(
+      +page,
+      +perPage,
+      sortBy as string,
+      'tablets',
+    );
+    res.status(Status.CREATED).send(products);
+  } catch (err) {
+    res
+      .status(Status.INTERNAL_SERVER_ERROR)
+      .send({ error: 'Failed to fetch tablets' });
+  }
+};
+
+export const getAccsessories = async (req: Request, res: Response) => {
+  const { page = 1, perPage = 10, sortBy = 'name' } = req.query;
+
+  try {
+    const products = await productService.getAll(
+      +page,
+      +perPage,
+      sortBy as string,
+      'accessories',
+    );
+    res.status(Status.CREATED).send(products);
+  } catch (err) {
+    res
+      .status(Status.INTERNAL_SERVER_ERROR)
+      .send({ error: 'Failed to fetch accessories' });
+  }
+};

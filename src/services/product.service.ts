@@ -18,6 +18,7 @@ export const getAll = async (
       [sortBy]: 'asc',
     },
   };
+
   if (category) {
     query.where = { category };
   }
@@ -58,6 +59,14 @@ export const getPhones = async () => {
   return prisma.product.findMany({
     where: {
       category: 'phones',
+    },
+  });
+};
+
+export const getAccessories = async () => {
+  return prisma.product.findMany({
+    where: {
+      category: 'accessories',
     },
   });
 };

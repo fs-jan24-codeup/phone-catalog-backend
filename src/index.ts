@@ -4,8 +4,8 @@ import { productRouterApp } from './routes/product.routes';
 import { userRouterApp } from './routes/user.routes';
 import { homeRouterApp } from './routes/home.routes';
 import { favouritesRouterApp } from './routes/favourites.routes';
-import { tabletsRouterApp } from './routes/tablets.routes';
-import { accessoriesRouterApp } from './routes/accessories.routes';
+// import { tabletsRouterApp } from './routes/tablets.routes';
+// import { accessoriesRouterApp } from './routes/accessories.routes';
 
 const app = express();
 
@@ -17,8 +17,8 @@ app.use('/products', productRouterApp);
 app.use('/users', userRouterApp);
 app.use('/home', homeRouterApp);
 app.use('/favourites', favouritesRouterApp);
-app.use('/tablets', tabletsRouterApp);
-app.use('/accsessories', accessoriesRouterApp);
+// app.use('/tablets', tabletsRouterApp);
+// app.use('/accsessories', accessoriesRouterApp);
 
 app.get('/', (req: Request, res: Response) => {
   res.send({ test: 'Ok' });
