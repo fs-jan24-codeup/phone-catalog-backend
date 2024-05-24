@@ -5,11 +5,14 @@ import {
   getRecommended,
   getNew,
   getPhones,
+  getDiscount,
 } from '../controllers/product.controller';
 
 const router = express.Router();
 
 router.get('/', getAll);
+
+router.get('/discount', getDiscount);
 
 router.get('/phones', getPhones);
 

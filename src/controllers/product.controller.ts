@@ -49,3 +49,12 @@ export const getPhones = async (_: Request, res: Response) => {
     res.status(500).send({ error: 'Failed to fetch phones' });
   }
 };
+
+export const getDiscount = async (_: Request, res: Response) => {
+  try {
+    const discountProducts = await productService.getDiscount();
+    res.status(200).send(discountProducts);
+  } catch {
+    res.status(500).send({ error: 'Failed to fetch discount products' });
+  }
+};

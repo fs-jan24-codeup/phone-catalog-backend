@@ -55,3 +55,11 @@ export const getPhones = async () => {
     },
   });
 };
+
+export const getDiscount = async () => {
+  return prisma.product.findMany({
+    orderBy: {
+      price: 'asc',
+    },
+  });
+};
