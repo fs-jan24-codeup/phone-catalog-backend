@@ -12,6 +12,7 @@ export const getAll = async (req: Request, res: Response): Promise<void> => {
 
   try {
     const products = await productService.getAll(limit, sortField, order, type);
+
     res.send(products);
   } catch (error) {
     res.status(500).send({ error: 'Failed to fetch products' });
