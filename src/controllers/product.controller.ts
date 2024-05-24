@@ -30,3 +30,21 @@ export const getRecommended = async (req: Request, res: Response) => {
   const products = await productService.getRecommended(id);
   res.send(products);
 };
+
+export const getNew = async (_: Request, res: Response) => {
+  try {
+    const products = await productService.getNew();
+    res.status(200).send(products);
+  } catch (err) {
+    res.status(500).send({ error: 'Failed to fetch new products' });
+  }
+};
+
+export const getPhones = async (_: Request, res: Response) => {
+  try {
+    const products = await productService.getPhones();
+    res.status(200).send(products);
+  } catch (err) {
+    res.status(500).send({ error: 'Failed to fetch phones' });
+  }
+};
