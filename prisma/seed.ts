@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import products from '../src/data/api/products.json';
 import phonesDetails from '../src/data/api/phones.json';
 import tabletsDetails from '../src/data/api/tablets.json';
@@ -49,7 +49,7 @@ async function main() {
           colorsAvailable: detail.colorsAvailable,
           color: detail.color,
           images: detail.images,
-          description: detail.description || [],
+          description: detail.description ?? Prisma.JsonNull,
           screen: detail.screen,
           resolution: detail.resolution,
           processor: detail.processor,
