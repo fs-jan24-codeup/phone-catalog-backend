@@ -3,6 +3,7 @@ import products from '../src/data/api/products.json';
 import phonesDetails from '../src/data/api/phones.json';
 import tabletsDetails from '../src/data/api/tablets.json';
 import accessoriesDetails from '../src/data/api/accessories.json';
+import { ProductDetailsType } from '../src/types/types';
 
 const prisma = new PrismaClient();
 
@@ -30,7 +31,10 @@ async function main() {
     });
   }
 
-  const insertProductDetails = async (details, category) => {
+  const insertProductDetails = async (
+    details: ProductDetailsType[],
+    category: string,
+  ) => {
     for (const detail of details) {
       await prisma.productDetails.create({
         data: {
@@ -45,7 +49,7 @@ async function main() {
           colorsAvailable: detail.colorsAvailable,
           color: detail.color,
           images: detail.images,
-          description: detail.description,
+          description: detail.description || [],
           screen: detail.screen,
           resolution: detail.resolution,
           processor: detail.processor,
