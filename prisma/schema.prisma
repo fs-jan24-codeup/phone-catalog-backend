@@ -71,3 +71,9 @@ model Post {
   author    User?    @relation(fields: [authorId], references: [id])
   authorId  Int?
 }
+
+// model Image {
+//   id        Int    @id @default(autoincrement())
+//   filename  String
+//   url       String
+// }
