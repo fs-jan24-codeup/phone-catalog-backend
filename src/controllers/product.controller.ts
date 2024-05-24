@@ -3,14 +3,15 @@ import * as productService from '../services/product.service';
 import { Request, Response } from 'express';
 
 export const getAll = async (req: Request, res: Response): Promise<void> => {
-  const { perPage, sortBy } = req.query;
+  const { page = 1, perPage = 10, sortBy = 'name' } = req.query;
 
-  const limit = parseInt(perPage as string, 10) || 10;
-  const sort = (sortBy as string) || 'name';
+  const pageNumber = parseInt(page as string, 10);
+  const limit = parseInt(perPage as string, 10);
+  const sort = sortBy as string;
 
   try {
-    const products = await productService.getAll(limit, sort);
-    res.send(products.map(prod => prod));
+    const products = await productService.getAll(pageNumber, limit, sort);
+    res.send(products);
   } catch (error) {
     res.status(500).send({ error: 'Failed to fetch products' });
   }
