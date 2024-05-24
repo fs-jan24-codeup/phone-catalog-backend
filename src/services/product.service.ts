@@ -33,3 +33,20 @@ export async function getRecommended(itemId: string): Promise<Product[]> {
     },
   });
 }
+
+export const getNew = async () => {
+  return prisma.product.findMany({
+    orderBy: {
+      year: 'desc',
+    },
+    take: 10,
+  });
+};
+
+export const getPhones = async () => {
+  return prisma.product.findMany({
+    where: {
+      category: 'phones',
+    },
+  });
+};
