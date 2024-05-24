@@ -13,7 +13,9 @@ export const getAll = async (req: Request, res: Response): Promise<void> => {
     const products = await productService.getAll(pageNumber, limit, sort);
     res.send(products);
   } catch (error) {
-    res.status(500).send({ error: 'Failed to fetch products' });
+    res
+      .status(Status.INTERNAL_SERVER_ERROR)
+      .send({ error: 'Failed to fetch products' });
   }
 };
 
@@ -35,17 +37,28 @@ export const getRecommended = async (req: Request, res: Response) => {
 export const getNew = async (_: Request, res: Response) => {
   try {
     const products = await productService.getNew();
-    res.status(200).send(products);
+    res.status(Status.CREATED).send(products);
   } catch (err) {
-    res.status(500).send({ error: 'Failed to fetch new products' });
+    res
+      .status(Status.INTERNAL_SERVER_ERROR)
+      .send({ error: 'Failed to fetch new products' });
   }
 };
 
-export const getPhones = async (_: Request, res: Response) => {
+export const getPhones = async (req: Request, res: Response) => {
+  const { page = 1, perPage = 10, sortBy = 'name' } = req.query;
+
   try {
-    const products = await productService.getPhones();
-    res.status(200).send(products);
+    const products = await productService.getAll(
+      +page,
+      +perPage,
+      sortBy as string,
+      'phones',
+    );
+    res.status(Status.CREATED).send(products);
   } catch (err) {
-    res.status(500).send({ error: 'Failed to fetch phones' });
+    res
+      .status(Status.INTERNAL_SERVER_ERROR)
+      .send({ error: 'Failed to fetch phones' });
   }
 };

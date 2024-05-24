@@ -6,16 +6,22 @@ export const getAll = async (
   page: number,
   limit: number,
   sortBy: string,
+  category = '',
 ): Promise<Product[]> => {
   const skip = (page - 1) * limit;
 
-  const result = await prisma.product.findMany({
+  const query = {
+    where: {},
     take: limit,
     skip,
     orderBy: {
       [sortBy]: 'asc',
     },
-  });
+  };
+  if (category) {
+    query.where = { category };
+  }
+  const result = await prisma.product.findMany(query);
 
   return result;
 };
