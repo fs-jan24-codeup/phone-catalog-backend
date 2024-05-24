@@ -3,28 +3,22 @@ import { Product } from '@prisma/client';
 import prisma from '../db.ts';
 
 export const getAll = async (
-  page: number,
   limit: number,
   sortBy: string,
-  category = '',
+  sortOrder: string,
+  productType: string | null,
 ): Promise<Product[]> => {
-  const skip = (page - 1) * limit;
+  const where = productType ? { category: productType } : {};
 
-  const query = {
-    where: {},
+  const result = await prisma.product.findMany({
     take: limit,
-    skip,
     orderBy: {
-      [sortBy]: 'asc',
+      [sortBy]: sortOrder,
     },
-  };
+    where,
+  });
 
-  if (category) {
-    query.where = { category };
-  }
-  const result = await prisma.product.findMany(query);
-
-  return result;
+  return result.length ? result : [];
 };
 
 export async function getOne(itemId: string): Promise<Product | null> {
