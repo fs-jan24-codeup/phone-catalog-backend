@@ -2,14 +2,6 @@ import { Product, ProductDetails } from '@prisma/client';
 
 import prisma from '../db.ts';
 
-export const normalizeProductDetails = (
-  product: Product & { details: ProductDetails[] },
-) => {
-  const { details, ...data } = product;
-
-  return { ...data, ...details[0] };
-};
-
 export const getAll = async (
   page: number,
   limit: number,
@@ -33,6 +25,9 @@ export const getAll = async (
   if (category) {
     query.where = { category };
   }
+  // if (limit) {
+  //   query.take = limit;
+  // }
   const result = await prisma.product.findMany(query);
 
   return result;

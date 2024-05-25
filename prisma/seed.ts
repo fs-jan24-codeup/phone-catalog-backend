@@ -62,9 +62,9 @@ async function main() {
     }
   };
 
-  await insertProductDetails(phonesDetails, 'phone');
-  await insertProductDetails(tabletsDetails, 'tablet');
-  await insertProductDetails(accessoriesDetails, 'accessory');
+  await insertProductDetails(phonesDetails, 'phones');
+  await insertProductDetails(tabletsDetails, 'tablets');
+  await insertProductDetails(accessoriesDetails, 'accessories');
 }
 
 main()
