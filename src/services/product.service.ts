@@ -6,31 +6,41 @@ export const getAll = async (
   page: number,
   limit: number,
   sortBy: string,
-  category = '',
+  category: string = '',
+  sortOrder: string,
+  searchString: string = '',
 ): Promise<(Product & { details: ProductDetails[] })[]> => {
-  const skip = (page - 1) * limit;
+  const offset = (page - 1) * limit;
 
-  const query = {
-    where: {},
+  const where: {
+    category?: string;
+    name?: { contains: string; mode: 'insensitive' };
+  } = {};
+
+  if (category) {
+    where.category = category;
+  }
+
+  if (searchString) {
+    where.name = {
+      contains: searchString,
+      mode: 'insensitive',
+    };
+  }
+
+  const result = await prisma.product.findMany({
     take: limit,
-    skip,
+    skip: offset,
     orderBy: {
-      [sortBy]: 'asc',
+      [sortBy]: sortOrder,
     },
+    where,
     include: {
       details: true,
     },
-  };
+  });
 
-  if (category) {
-    query.where = { category };
-  }
-  // if (limit) {
-  //   query.take = limit;
-  // }
-  const result = await prisma.product.findMany(query);
-
-  return result;
+  return result.length ? result : [];
 };
 
 export async function getOne(
@@ -70,32 +80,6 @@ export const getNew = async (): Promise<
       year: 'desc',
     },
     take: 10,
-    include: {
-      details: true,
-    },
-  });
-};
-
-export const getPhones = async (): Promise<
-  (Product & { details: ProductDetails[] })[]
-> => {
-  return prisma.product.findMany({
-    where: {
-      category: 'phones',
-    },
-    include: {
-      details: true,
-    },
-  });
-};
-
-export const getAccessories = async (): Promise<
-  (Product & { details: ProductDetails[] })[]
-> => {
-  return prisma.product.findMany({
-    where: {
-      category: 'accessories',
-    },
     include: {
       details: true,
     },
