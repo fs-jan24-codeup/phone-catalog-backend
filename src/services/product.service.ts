@@ -1,13 +1,21 @@
-import { Product } from '@prisma/client';
+import { Product, ProductDetails } from '@prisma/client';
 
 import prisma from '../db.ts';
+
+export const normalizeProductDetails = (
+  product: Product & { details: ProductDetails[] },
+) => {
+  const { details, ...data } = product;
+
+  return { ...data, ...details[0] };
+};
 
 export const getAll = async (
   page: number,
   limit: number,
   sortBy: string,
   category = '',
-): Promise<Product[]> => {
+): Promise<(Product & { details: ProductDetails[] })[]> => {
   const skip = (page - 1) * limit;
 
   const query = {
@@ -16,6 +24,9 @@ export const getAll = async (
     skip,
     orderBy: {
       [sortBy]: 'asc',
+    },
+    include: {
+      details: true,
     },
   };
 
@@ -27,13 +38,20 @@ export const getAll = async (
   return result;
 };
 
-export async function getOne(itemId: string): Promise<Product | null> {
+export async function getOne(
+  itemId: string,
+): Promise<(Product & { details: ProductDetails[] }) | null> {
   return prisma.product.findUnique({
     where: { itemId },
+    include: {
+      details: true,
+    },
   });
 }
 
-export async function getRecommended(itemId: string): Promise<Product[]> {
+export async function getRecommended(
+  itemId: string,
+): Promise<(Product & { details: ProductDetails[] })[]> {
   const product = await getOne(itemId);
   if (!product) {
     return [];
@@ -43,30 +61,48 @@ export async function getRecommended(itemId: string): Promise<Product[]> {
       category: product.category,
       id: { not: product.id },
     },
+    include: {
+      details: true,
+    },
   });
 }
 
-export const getNew = async () => {
+export const getNew = async (): Promise<
+  (Product & { details: ProductDetails[] })[]
+> => {
   return prisma.product.findMany({
     orderBy: {
       year: 'desc',
     },
     take: 10,
-  });
-};
-
-export const getPhones = async () => {
-  return prisma.product.findMany({
-    where: {
-      category: 'phones',
+    include: {
+      details: true,
     },
   });
 };
 
-export const getAccessories = async () => {
+export const getPhones = async (): Promise<
+  (Product & { details: ProductDetails[] })[]
+> => {
+  return prisma.product.findMany({
+    where: {
+      category: 'phones',
+    },
+    include: {
+      details: true,
+    },
+  });
+};
+
+export const getAccessories = async (): Promise<
+  (Product & { details: ProductDetails[] })[]
+> => {
   return prisma.product.findMany({
     where: {
       category: 'accessories',
+    },
+    include: {
+      details: true,
     },
   });
 };
