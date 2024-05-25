@@ -31,7 +31,9 @@ export const getAll = async (req: Request, res: Response): Promise<void> => {
     );
     res.send(products.map(prod => normalizeProductDetails(prod)));
   } catch (error) {
-    res.status(500).send({ error: 'Failed to fetch products' });
+    res
+      .status(Status.INTERNAL_SERVER_ERROR)
+      .send({ error: 'Failed to fetch products' });
   }
 };
 
@@ -55,7 +57,9 @@ export const getNew = async (_: Request, res: Response) => {
     const products = await productService.getNew();
     res.send(products.map(prod => normalizeProductDetails(prod)));
   } catch (err) {
-    res.status(500).send({ error: 'Failed to fetch new products' });
+    res
+      .status(Status.INTERNAL_SERVER_ERROR)
+      .send({ error: 'Failed to fetch new products' });
   }
 };
 
@@ -140,9 +144,10 @@ export const getAccsessories = async (req: Request, res: Response) => {
 export const getDiscount = async (_: Request, res: Response) => {
   try {
     const discountProducts = await productService.getDiscount();
-    // res.status(200).send(discountProducts.map(prod => normalizeProductDetails(prod)));
-    res.status(200).send(discountProducts);
+    res.status(Status.OK).send(discountProducts);
   } catch {
-    res.status(500).send({ error: 'Failed to fetch discount products' });
+    res
+      .status(Status.INTERNAL_SERVER_ERROR)
+      .send({ error: 'Failed to fetch discount products' });
   }
 };
