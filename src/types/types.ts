@@ -1,5 +1,22 @@
 import { Prisma } from '@prisma/client';
 
+export type ProductType = {
+  id: string;
+  itemId: string;
+  name: string;
+  category: string;
+  fullPrice: number;
+  price: number;
+  screen: string;
+  capacity: string;
+  color: string;
+  ram: string;
+  year: number;
+  image: string;
+
+  details: ProductDetailsType[];
+};
+
 export type ProductDetailsType = {
   id: string;
   namespaceId: string;

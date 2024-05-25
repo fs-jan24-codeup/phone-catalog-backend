@@ -26,7 +26,6 @@ model Product {
   ram                String?
   year               Int?
   image              String
-
   details            ProductDetails[]
 }
 

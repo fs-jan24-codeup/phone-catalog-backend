@@ -46,13 +46,15 @@ export const getOne = async (req: Request, res: Response) => {
 export const getRecommended = async (req: Request, res: Response) => {
   const { id } = req.params;
   const products = await productService.getRecommended(id);
-  res.send(products);
+  res.send(products.map(prod => productService.normalizeProductDetails(prod)));
 };
 
 export const getNew = async (_: Request, res: Response) => {
   try {
     const products = await productService.getNew();
-    res.status(200).send(products);
+    res.send(
+      products.map(prod => productService.normalizeProductDetails(prod)),
+    );
   } catch (err) {
     res.status(500).send({ error: 'Failed to fetch new products' });
   }
@@ -74,7 +76,9 @@ export const getPhones = async (req: Request, res: Response) => {
       'phones',
       sortOrder as string,
     );
-    res.status(Status.CREATED).send(products);
+    res
+      .status(Status.CREATED)
+      .send(products.map(prod => productService.normalizeProductDetails(prod)));
   } catch (err) {
     res
       .status(Status.INTERNAL_SERVER_ERROR)
@@ -98,7 +102,9 @@ export const getTablets = async (req: Request, res: Response) => {
       'tablets',
       sortOrder as string,
     );
-    res.status(Status.CREATED).send(products);
+    res
+      .status(Status.CREATED)
+      .send(products.map(prod => productService.normalizeProductDetails(prod)));
   } catch (err) {
     res
       .status(Status.INTERNAL_SERVER_ERROR)
@@ -122,10 +128,21 @@ export const getAccsessories = async (req: Request, res: Response) => {
       'accessories',
       sortOrder as string,
     );
-    res.status(Status.CREATED).send(products);
+    res
+      .status(Status.CREATED)
+      .send(products.map(prod => productService.normalizeProductDetails(prod)));
   } catch (err) {
     res
       .status(Status.INTERNAL_SERVER_ERROR)
       .send({ error: 'Failed to fetch accessories' });
+  }
+};
+
+export const getDiscount = async (_: Request, res: Response) => {
+  try {
+    const discountProducts = await productService.getDiscount();
+    res.status(200).send(discountProducts);
+  } catch {
+    res.status(500).send({ error: 'Failed to fetch discount products' });
   }
 };
