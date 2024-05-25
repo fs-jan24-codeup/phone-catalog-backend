@@ -31,13 +31,15 @@ export const getOne = async (req: Request, res: Response) => {
 export const getRecommended = async (req: Request, res: Response) => {
   const { id } = req.params;
   const products = await productService.getRecommended(id);
-  res.send(products);
+  res.send(products.map(prod => productService.normalizeProductDetails(prod)));
 };
 
 export const getNew = async (_: Request, res: Response) => {
   try {
     const products = await productService.getNew();
-    res.status(Status.CREATED).send(products);
+    res.send(
+      products.map(prod => productService.normalizeProductDetails(prod)),
+    );
   } catch (err) {
     res
       .status(Status.INTERNAL_SERVER_ERROR)
@@ -55,7 +57,9 @@ export const getPhones = async (req: Request, res: Response) => {
       sortBy as string,
       'phones',
     );
-    res.status(Status.CREATED).send(products);
+    res
+      .status(Status.CREATED)
+      .send(products.map(prod => productService.normalizeProductDetails(prod)));
   } catch (err) {
     res
       .status(Status.INTERNAL_SERVER_ERROR)
@@ -73,7 +77,9 @@ export const getTablets = async (req: Request, res: Response) => {
       sortBy as string,
       'tablets',
     );
-    res.status(Status.CREATED).send(products);
+    res
+      .status(Status.CREATED)
+      .send(products.map(prod => productService.normalizeProductDetails(prod)));
   } catch (err) {
     res
       .status(Status.INTERNAL_SERVER_ERROR)
@@ -91,7 +97,9 @@ export const getAccsessories = async (req: Request, res: Response) => {
       sortBy as string,
       'accessories',
     );
-    res.status(Status.CREATED).send(products);
+    res
+      .status(Status.CREATED)
+      .send(products.map(prod => productService.normalizeProductDetails(prod)));
   } catch (err) {
     res
       .status(Status.INTERNAL_SERVER_ERROR)
