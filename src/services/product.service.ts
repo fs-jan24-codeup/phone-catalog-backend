@@ -2,14 +2,6 @@ import { Product, ProductDetails } from '@prisma/client';
 
 import prisma from '../db.ts';
 
-export const normalizeProductDetails = (
-  product: Product & { details: ProductDetails[] },
-) => {
-  const { details, ...data } = product;
-
-  return { ...data, ...details[0] };
-};
-
 export const getAll = async (
   page: number,
   limit: number,
@@ -17,7 +9,7 @@ export const getAll = async (
   category: string = '',
   sortOrder: string,
   searchString: string = '',
-): Promise<Product[]> => {
+): Promise<(Product & { details: ProductDetails[] })[]> => {
   const offset = (page - 1) * limit;
 
   const where: {
@@ -43,6 +35,9 @@ export const getAll = async (
       [sortBy]: sortOrder,
     },
     where,
+    include: {
+      details: true,
+    },
   });
 
   return result.length ? result : [];
@@ -85,32 +80,6 @@ export const getNew = async (): Promise<
       year: 'desc',
     },
     take: 10,
-    include: {
-      details: true,
-    },
-  });
-};
-
-export const getPhones = async (): Promise<
-  (Product & { details: ProductDetails[] })[]
-> => {
-  return prisma.product.findMany({
-    where: {
-      category: 'phones',
-    },
-    include: {
-      details: true,
-    },
-  });
-};
-
-export const getAccessories = async (): Promise<
-  (Product & { details: ProductDetails[] })[]
-> => {
-  return prisma.product.findMany({
-    where: {
-      category: 'accessories',
-    },
     include: {
       details: true,
     },

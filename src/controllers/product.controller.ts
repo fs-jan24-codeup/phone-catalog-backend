@@ -1,6 +1,7 @@
 import { Status } from '../types/constants';
 import * as productService from '../services/product.service';
 import { Request, Response } from 'express';
+import { normalizeProductDetails } from '../utils/normalize';
 
 export const getAll = async (req: Request, res: Response): Promise<void> => {
   const {
@@ -28,7 +29,7 @@ export const getAll = async (req: Request, res: Response): Promise<void> => {
       order,
       search,
     );
-    res.send(products);
+    res.send(products.map(prod => normalizeProductDetails(prod)));
   } catch (error) {
     res.status(500).send({ error: 'Failed to fetch products' });
   }
@@ -40,21 +41,19 @@ export const getOne = async (req: Request, res: Response) => {
   if (!product) {
     return res.sendStatus(Status.NOT_FOUND);
   }
-  res.send(product);
+  res.send(normalizeProductDetails(product));
 };
 
 export const getRecommended = async (req: Request, res: Response) => {
   const { id } = req.params;
   const products = await productService.getRecommended(id);
-  res.send(products.map(prod => productService.normalizeProductDetails(prod)));
+  res.send(products.map(prod => normalizeProductDetails(prod)));
 };
 
 export const getNew = async (_: Request, res: Response) => {
   try {
     const products = await productService.getNew();
-    res.send(
-      products.map(prod => productService.normalizeProductDetails(prod)),
-    );
+    res.send(products.map(prod => normalizeProductDetails(prod)));
   } catch (err) {
     res.status(500).send({ error: 'Failed to fetch new products' });
   }
@@ -78,7 +77,7 @@ export const getPhones = async (req: Request, res: Response) => {
     );
     res
       .status(Status.CREATED)
-      .send(products.map(prod => productService.normalizeProductDetails(prod)));
+      .send(products.map(prod => normalizeProductDetails(prod)));
   } catch (err) {
     res
       .status(Status.INTERNAL_SERVER_ERROR)
@@ -104,7 +103,7 @@ export const getTablets = async (req: Request, res: Response) => {
     );
     res
       .status(Status.CREATED)
-      .send(products.map(prod => productService.normalizeProductDetails(prod)));
+      .send(products.map(prod => normalizeProductDetails(prod)));
   } catch (err) {
     res
       .status(Status.INTERNAL_SERVER_ERROR)
@@ -130,7 +129,7 @@ export const getAccsessories = async (req: Request, res: Response) => {
     );
     res
       .status(Status.CREATED)
-      .send(products.map(prod => productService.normalizeProductDetails(prod)));
+      .send(products.map(prod => normalizeProductDetails(prod)));
   } catch (err) {
     res
       .status(Status.INTERNAL_SERVER_ERROR)
@@ -141,6 +140,7 @@ export const getAccsessories = async (req: Request, res: Response) => {
 export const getDiscount = async (_: Request, res: Response) => {
   try {
     const discountProducts = await productService.getDiscount();
+    // res.status(200).send(discountProducts.map(prod => normalizeProductDetails(prod)));
     res.status(200).send(discountProducts);
   } catch {
     res.status(500).send({ error: 'Failed to fetch discount products' });
