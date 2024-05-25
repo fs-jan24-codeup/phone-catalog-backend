@@ -98,3 +98,12 @@ export const getAccsessories = async (req: Request, res: Response) => {
       .send({ error: 'Failed to fetch accessories' });
   }
 };
+
+export const getDiscount = async (_: Request, res: Response) => {
+  try {
+    const discountProducts = await productService.getDiscount();
+    res.status(200).send(discountProducts);
+  } catch {
+    res.status(500).send({ error: 'Failed to fetch discount products' });
+  }
+};
