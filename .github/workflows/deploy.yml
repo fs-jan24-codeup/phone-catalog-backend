@@ -58,4 +58,5 @@ jobs:
         env:
           deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
+          echo "Deploy URL: ${deploy_url}"
           curl "${deploy_url}"
