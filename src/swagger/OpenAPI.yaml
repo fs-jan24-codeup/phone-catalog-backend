@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Swagger Phone Catalog - OpenAPI 3.0.0
+  title: Swagger Phone Catalog - OpenAPI 3.0
   description: |-
     This is a sample Phone Catalog Server based on the OpenAPI 3.0 specification.  
     Some useful links:
@@ -10,7 +10,7 @@ info:
     email: apiteam@swagger.io
   license:
     name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+    url: http://localhost:3000
   version: 1.0.11
 externalDocs:
   description: Find out more about Swagger
@@ -25,13 +25,20 @@ paths:
       summary: Get all products
       operationId: getAllProducts
       parameters:
-        - name: limit
+        - name: perPage
           in: query
-          description: Limit the number of products to retrieve
+          description: Limit the number of products to retrieve per page
           required: false
           schema:
             type: integer
             default: 10
+        - name: page
+          in: query
+          description: Page number to retrieve
+          required: false
+          schema:
+            type: integer
+            default: 1
         - name: sortBy
           in: query
           description: Field to sort by
@@ -48,13 +55,21 @@ paths:
             type: string
             enum: [asc, desc]
             default: asc
-        - name: productType
+        - name: category
           in: query
-          description: Filter products by type
+          description: Filter products by category
           required: false
           schema:
             type: string
-            enum: [phones, accessories, tablets] # Додати доступні значення тут
+            enum: ['', phones, accessories, tablets]
+            default: ''
+        - name: searchString
+          in: query
+          description: Search products by name
+          required: false
+          schema:
+            type: string
+            default: ''
       responses:
         '200':
           description: Successful operation
@@ -70,6 +85,44 @@ paths:
         - products
       summary: Get phones
       operationId: getPhones
+      parameters:
+        - name: perPage
+          in: query
+          description: Limit the number of products to retrieve per page
+          required: false
+          schema:
+            type: integer
+            default: 10
+        - name: page
+          in: query
+          description: Page number to retrieve
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: sortBy
+          in: query
+          description: Field to sort by
+          required: false
+          schema:
+            type: string
+            enum: [name, price]
+            default: name
+        - name: sortOrder
+          in: query
+          description: Sort order
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: asc
+        - name: searchString
+          in: query
+          description: Search products by name
+          required: false
+          schema:
+            type: string
+            default: ''
       responses:
         '200':
           description: Successful operation
@@ -166,27 +219,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
-  /users/{id}:
-    get:
-      tags:
-        - users
-      summary: Get user by ID
-      operationId: getUserById
-      parameters:
-        - name: id
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
   /home:
     get:
       tags:
@@ -202,6 +234,36 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Phone'
+  /products/tablets:
+    get:
+      tags:
+        - products
+      summary: Get tablets
+      operationId: getTablets
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+  /products/accessories:
+    get:
+      tags:
+        - products
+      summary: Get accessories
+      operationId: getAccessories
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
 components:
   schemas:
     Product:
