@@ -6,25 +6,38 @@ export const getAll = async (
   page: number,
   limit: number,
   sortBy: string,
-  category = '',
+  category: string = '',
+  sortOrder: string,
+  searchString: string = '',
 ): Promise<Product[]> => {
-  const skip = (page - 1) * limit;
+  const offset = (page - 1) * limit;
 
-  const query = {
-    where: {},
-    take: limit,
-    skip,
-    orderBy: {
-      [sortBy]: 'asc',
-    },
-  };
+  const where: {
+    category?: string;
+    name?: { contains: string; mode: 'insensitive' };
+  } = {};
 
   if (category) {
-    query.where = { category };
+    where.category = category;
   }
-  const result = await prisma.product.findMany(query);
 
-  return result;
+  if (searchString) {
+    where.name = {
+      contains: searchString,
+      mode: 'insensitive',
+    };
+  }
+
+  const result = await prisma.product.findMany({
+    take: limit,
+    skip: offset,
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
+    where,
+  });
+
+  return result.length ? result : [];
 };
 
 export async function getOne(itemId: string): Promise<Product | null> {
