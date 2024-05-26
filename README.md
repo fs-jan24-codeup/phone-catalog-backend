@@ -15,7 +15,7 @@ The backend of this e-commerce platform is designed to provide robust functional
 ## Technologies Used
 
 - Backend: Node.js
-- Database:
+- Database: Prisma
 
 ## Setup Instructions
 
@@ -28,7 +28,7 @@ The backend of this e-commerce platform is designed to provide robust functional
 
 Meet the developers behind Nice Gadgets Backend:
 
-- Tetiana Lisna ([GitHub](https://github.com/Vasya564))
+- Tetiana Lisna ([GitHub](https://github.com/tetlisna))
 - Kateryna Shepetska ([GitHub](https://github.com/kshepetska))
 - Viktoriia Zaitseva ([GitHub](https://github.com/ViktoriiaRepo))
 - Vitalii Vashkevych ([GitHub](https://github.com/VitaliiVashkevych))
