@@ -1,6 +1,6 @@
 import { Product, ProductDetails } from '@prisma/client';
 
-import prisma from '../db.ts';
+import prisma from '../utils/db.ts';
 
 export const getAll = async (
   page: number,
