@@ -57,6 +57,7 @@ model User {
   email String  @unique
   name  String?
   posts Post[]
+  cart UserCart[]
 }
 
 model Post {
@@ -69,4 +70,12 @@ model Post {
   viewCount Int      @default(0)
   author    User?    @relation(fields: [authorId], references: [id])
   authorId  Int?
+}
+
+model UserCart {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId User @relation(fields: [userId], references: [id])
+  productId Product[]
 }
