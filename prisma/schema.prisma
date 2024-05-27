@@ -27,6 +27,7 @@ model Product {
   year               Int?
   image              String
   details            ProductDetails[]
+  OrderProduct       OrderProduct[]
 }
 
 model ProductDetails {
@@ -57,6 +58,7 @@ model User {
   email String  @unique
   name  String?
   posts Post[]
+  orders Order[]
 }
 
 model Post {
@@ -69,4 +71,23 @@ model Post {
   viewCount Int      @default(0)
   author    User?    @relation(fields: [authorId], references: [id])
   authorId  Int?
+}
+
+model Order {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
+  products  OrderProduct[]
+}
+
+model OrderProduct {
+  orderId   Int
+  productId Int
+  quantity  Int
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([orderId, productId])
 }
