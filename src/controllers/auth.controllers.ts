@@ -4,6 +4,8 @@ import { emailService } from '../services/email.service';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { jwtService } from '../services/jwt.service.ts';
 import prisma from '../utils/db.ts';
+import bcrypt from 'bcrypt';
+import { tokenService } from '../services/token.service.ts';
 
 const register = async (req: Request, res: Response) => {
   const { email, password, name = '' } = req.body;
@@ -12,11 +14,12 @@ const register = async (req: Request, res: Response) => {
 
   try {
     const activationToken = uuidv4();
+    const hashedPass = await bcrypt.hash(password, 10);
     const newUser = await prisma.user.create({
       data: {
         email,
         name,
-        password,
+        password: hashedPass,
         activationToken,
       },
     });
@@ -39,31 +42,6 @@ const register = async (req: Request, res: Response) => {
   }
 };
 
-// const activate = async (req: Request, res: Response) => {
-//   const { activationToken } = req.params;
-
-//   const user = await prisma.user.findUnique({
-//     where: {
-//       activationToken,
-//     },
-//   });
-
-//   if (!user) {
-//     return res.status(404).json({ error: 'User not found' });
-//   }
-
-//   await prisma.user.update({
-//     where: {
-//       id: user.id,
-//     },
-//     data: {
-//       activationToken: '',
-//     },
-//   });
-
-//   res.status(200).json({ message: 'User activated successfully', user });
-// };
-
 interface NormalizedUser {
   id: number;
   email: string;
@@ -83,12 +61,46 @@ const login = async (req: Request, res: Response) => {
     },
   });
 
-  if (!user || user.password !== password) {
+  if (!user) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+
+  if (!isPasswordValid) {
     return res.status(404).json({ error: 'Incorrect email or password' });
   }
 
+  generateToken(res, user);
+};
+
+const refresh = async (req: Request, res: Response) => {
+  const { refreshToken } = req.cookies;
+
+  const user = jwtService.verifyRefresh(refreshToken);
+  const token = await tokenService.getByToken(refreshToken);
+
+  if (!user || !token) {
+    throw new Error('Unauthorized');
+    return;
+  }
+
+  generateToken(res, user);
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const generateToken = async (res: Response, user: any) => {
   const normalisedUser = normalize(user);
+
   const accessToken = jwtService.sign(normalisedUser);
+  const refreshAccessToken = jwtService.signRefresh(normalisedUser);
+
+  await tokenService.save(normalisedUser.id, refreshAccessToken);
+
+  res.cookie('refreshToken', refreshAccessToken, {
+    httpOnly: true,
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+  });
 
   res.send({
     user: normalisedUser,
@@ -96,8 +108,26 @@ const login = async (req: Request, res: Response) => {
   });
 };
 
+const logout = async (req: Request, res: Response) => {
+  const { refreshToken } = req.cookies;
+  const user = await jwtService.verifyRefresh(refreshToken);
+
+  if (!user || !refreshToken) {
+    throw new Error('Unauthorized');
+    return;
+  }
+
+  if (typeof user === 'object' && user !== null && 'id' in user) {
+    const userId = user.id;
+    await tokenService.remove(userId);
+  }
+
+  res.sendStatus(204);
+};
+
 export const authController = {
   register,
-  //   activate,
   login,
+  refresh,
+  logout,
 };
