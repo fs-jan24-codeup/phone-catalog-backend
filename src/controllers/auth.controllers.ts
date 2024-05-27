@@ -6,7 +6,9 @@ import { jwtService } from '../services/jwt.service.ts';
 import prisma from '../utils/db.ts';
 
 const register = async (req: Request, res: Response) => {
-  const { email, name, password } = req.body;
+  const { email, password, name = '' } = req.body;
+
+  console.log({ email, password, name, body: req.body });
 
   try {
     const activationToken = uuidv4();
@@ -31,6 +33,8 @@ const register = async (req: Request, res: Response) => {
     ) {
       return res.status(400).json({ error: 'Email already exists' });
     }
+    console.log(error);
+
     res.status(500).json({ error: 'Could not register user' });
   }
 };

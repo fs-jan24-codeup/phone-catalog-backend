@@ -2,20 +2,22 @@ import { Status } from '../types/constants';
 import * as homeService from '../services/home.service';
 import { Request, Response } from 'express';
 
-export const getAllPhones = async (req: Request, res: Response) => {
+export const getAllCategoriesWithCounts = async (
+  req: Request,
+  res: Response,
+) => {
   try {
-    const products = await homeService.getAll();
-    const phones = products.filter(phone => phone.category === 'phones');
+    const categories = await homeService.getCountByCategory();
 
-    if (!phones.length) {
-      res.status(Status.NOT_FOUND);
+    if (!categories.length) {
+      res.status(Status.NOT_FOUND).send({ message: 'No products found' });
+      return;
     }
 
-    res.statusCode = Status.OK;
-    res.send(phones);
+    res.status(Status.OK).send(categories);
   } catch (error) {
     res
       .status(Status.INTERNAL_SERVER_ERROR)
-      .send({ error: 'An error occurred while fetching phones' });
+      .send({ error: 'An error occurred while fetching categories' });
   }
 };

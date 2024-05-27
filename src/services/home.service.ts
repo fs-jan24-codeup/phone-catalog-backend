@@ -1,11 +1,22 @@
-import { Product } from '@prisma/client';
-
 import prisma from '../utils/db';
 
-async function getAll(): Promise<Product[]> {
-  const result = await prisma.product.findMany();
-
-  return result;
+interface ProductCountByCategory {
+  category: string;
+  count: number;
 }
 
-export { getAll };
+async function getCountByCategory(): Promise<ProductCountByCategory[]> {
+  const result = await prisma.product.groupBy({
+    by: ['category'],
+    _count: {
+      category: true,
+    },
+  });
+
+  return result.map(item => ({
+    category: item.category,
+    count: item._count.category,
+  }));
+}
+
+export { getCountByCategory };

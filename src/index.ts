@@ -13,7 +13,8 @@ app.use(cors({ origin: '*' }));
 
 app.use(
   cors({
-    origin: process.env.CLIENT_HOST,
+    // origin: process.env.CLIENT_HOST,
+    origin: '*',
     credentials: true,
   }),
 );
