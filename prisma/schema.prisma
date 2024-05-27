@@ -80,3 +80,11 @@ model OrderProduct {
 
   @@id([orderId, productId])
 }
+
+model UserCart {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId User @relation(fields: [userId], references: [id])
+  productId Product[]
+}
