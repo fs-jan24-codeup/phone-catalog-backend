@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { emailService } from '../services/email.service';
-import prisma from '../db.ts';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { jwtService } from '../services/jwt.service.ts';
+import prisma from '../utils/db.ts';
 
 const register = async (req: Request, res: Response) => {
   const { email, name, password } = req.body;

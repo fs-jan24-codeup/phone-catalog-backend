@@ -8,7 +8,7 @@ export const getAllPhones = async (req: Request, res: Response) => {
     const phones = products.filter(phone => phone.category === 'phones');
 
     if (!phones.length) {
-      res.status(Status.NOT_FOUND).json({ error: 'Phones not found!!!' });
+      res.status(Status.NOT_FOUND);
     }
 
     res.statusCode = Status.OK;
