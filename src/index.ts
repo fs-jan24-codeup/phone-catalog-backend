@@ -5,6 +5,7 @@ import { userRouterApp } from './routes/user.routes';
 import { homeRouterApp } from './routes/home.routes';
 import { favouritesRouterApp } from './routes/favourites.routes';
 import { authRouterApp } from './routes/auth.routes';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use(cookieParser());
 app.use('/assets', express.static('public'));
 
 app.use('/products', productRouterApp);
@@ -25,7 +27,7 @@ app.use('/users', userRouterApp);
 app.use('/home', homeRouterApp);
 app.use('/favourites', favouritesRouterApp);
 
-app.use('/auth', authRouterApp);
+app.use('/', authRouterApp);
 // app.use('/activation/:activationToken', authRouterApp);
 
 app.get('/', (req: Request, res: Response) => {
