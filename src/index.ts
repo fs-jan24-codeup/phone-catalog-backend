@@ -9,7 +9,7 @@ import { ordersRouterApp } from './routes/orders.routes';
 
 const app = express();
 
-// app.use(cors({ origin: '*' }));
+app.use(cors({ origin: '*' }));
 
 app.use(
   cors({
