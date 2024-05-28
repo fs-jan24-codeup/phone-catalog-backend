@@ -1,37 +1,25 @@
-// import { UserCart } from '@prisma/client';
 import prisma from '../utils/db';
 
-const getOrders = async () => {
-  const orders = await prisma.userCart.findMany({
-    include: { products: true },
-  });
-
-  return orders;
-};
-
-const createOrder = async (userId: number, products) => {
-  const order = await prisma.userCart.create({
+const createItemtoCart = async (userId: number, productId: number) => {
+  const newItem = await prisma.cart.create({
     data: {
       userId,
-      products: {
-        create: products.map(product => ({
-          productId: product.productId,
-          quantity: product.quantity,
-        })),
-      },
-    },
-    include: { products: true },
-  });
-
-  return order;
-};
-
-const deleteOrder = async (orderId: number): Promise<void> => {
-  await prisma.userCart.delete({
-    where: {
-      id: orderId,
+      productId,
     },
   });
+
+  return newItem;
 };
 
-export { getOrders, createOrder, deleteOrder };
+const getCart = async (userId: number) => {
+  const cart = await prisma.cart.findMany({
+    where: { userId: userId },
+    include: {
+      product: true,
+    },
+  });
+
+  return cart;
+};
+
+export { createItemtoCart, getCart };
