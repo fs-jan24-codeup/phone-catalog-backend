@@ -28,7 +28,7 @@ model Product {
   image        String
   details      ProductDetails[]
   OrderProduct OrderProduct[]
-  carts        Cart[]
+  CartProducts  CartProducts[]
 }
 
 model ProductDetails {
@@ -88,9 +88,17 @@ model OrderProduct {
 model Cart {
   id        Int     @id @default(autoincrement())
   userId    Int
-  productId Int
   user      User    @relation(fields: [userId], references: [id])
-  product   Product @relation(fields: [productId], references: [id])
+  CartProducts  CartProducts[]
+}
+
+model CartProducts {
+  cartId   Int
+  productId Int
+  quantity  Int
+  cart     Cart   @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  @@id([cartId, productId])
 }
 
 model RefreshToken {
