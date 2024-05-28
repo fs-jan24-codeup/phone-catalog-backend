@@ -2,45 +2,29 @@ import { Request, Response } from 'express';
 import * as cartService from '../services/cart.service';
 import { Status } from '../types/constants';
 
-export const getOrders = async (req: Request, res: Response) => {
+export const addItemToCart = async (req: Request, res: Response) => {
+  const { userId, productId } = req.body;
   try {
-    const orders = await cartService.getOrders();
-    console.log(orders);
-    res.statusCode = Status.OK;
-    res.send(orders);
-  } catch {
-    res
-      .status(Status.INTERNAL_SERVER_ERROR)
-      .send({ error: 'An error occurred while fetching orders' });
-  }
-};
-
-export const createOrder = async (req: Request, res: Response) => {
-  const { userId, products } = req.body;
-
-  try {
-    const orders = await cartService.createOrder(userId, products);
+    const cartItem = await cartService.createItemtoCart(userId, productId);
 
     res.statusCode = Status.CREATED;
-    res.send(orders);
+    res.send(cartItem);
   } catch (error) {
-    console.log(error);
-    res
-      .status(Status.INTERNAL_SERVER_ERROR)
-      .send({ error: 'An error occurred while fetching orders' });
+    res.statusCode = Status.INTERNAL_SERVER_ERROR;
+    res.send({ error: 'An error occurred while adding item to cart' });
   }
 };
 
-export const deleteOrder = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  try {
-    await cartService.deleteOrder(Number(id));
+export const getCart = async (req: Request, res: Response) => {
+  const { userId } = req.params;
 
-    res.statusCode = Status.NO_CONTENT;
-    res.end();
-  } catch {
-    res
-      .status(Status.INTERNAL_SERVER_ERROR)
-      .send({ error: 'An error occurred while deleting order' });
+  try {
+    const cartItems = await cartService.getCart(Number(userId));
+
+    res.statusCode = Status.OK;
+    res.send(cartItems);
+  } catch (error) {
+    res.status(Status.INTERNAL_SERVER_ERROR);
+    res.send({ error: 'An error occurred while fetching cart' });
   }
 };

@@ -28,6 +28,7 @@ model Product {
   image              String
   details            ProductDetails[]
   OrderProduct       OrderProduct[]
+  carts              Cart[]
 }
 
 model ProductDetails {
@@ -81,6 +82,14 @@ model OrderProduct {
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@id([orderId, productId])
+}
+
+model Cart {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  productId Int
+  user      User     @relation(fields: [userId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
 }
 
 // model UserCart {
