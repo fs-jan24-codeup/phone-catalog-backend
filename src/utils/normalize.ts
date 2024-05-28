@@ -5,7 +5,5 @@ export const normalizeProductDetails = (
 ) => {
   const { details, ...data } = product;
 
-  console.log({ ...data, ...details[0] });
-
   return { ...data, ...details[0] };
 };

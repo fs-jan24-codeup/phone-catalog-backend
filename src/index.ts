@@ -6,7 +6,11 @@ import { homeRouterApp } from './routes/home.routes';
 import { favouritesRouterApp } from './routes/favourites.routes';
 import { authRouterApp } from './routes/auth.routes';
 import { ordersRouterApp } from './routes/orders.routes';
+
 import { cartRouterApp } from './routes/cart.routes';
+
+import cookieParser from 'cookie-parser';
+
 
 const app = express();
 
@@ -14,12 +18,14 @@ app.use(cors({ origin: '*' }));
 
 app.use(
   cors({
-    origin: process.env.CLIENT_HOST,
+    // origin: process.env.CLIENT_HOST,
+    origin: '*',
     credentials: true,
   }),
 );
 
 app.use(express.json());
+app.use(cookieParser());
 app.use('/assets', express.static('public'));
 
 app.use('/products', productRouterApp);
@@ -29,8 +35,7 @@ app.use('/favourites', favouritesRouterApp);
 app.use('/orders', ordersRouterApp);
 app.use('/cart', cartRouterApp);
 
-app.use('/auth', authRouterApp);
-// app.use('/activation/:activationToken', authRouterApp);
+app.use('/', authRouterApp);
 
 app.get('/', (req: Request, res: Response) => {
   res.send({ test: 'Ok' });
