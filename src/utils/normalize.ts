@@ -3,7 +3,7 @@ import { Product, ProductDetails } from '@prisma/client';
 export const normalizeProductDetails = (
   product: Product & { details: ProductDetails[] },
 ) => {
-  const { details, ...data } = product;
+  const { details, id, ...data } = product;
 
-  return { ...data, ...details[0] };
+  return { productId: id, ...data, ...details[0] };
 };
