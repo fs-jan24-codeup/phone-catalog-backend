@@ -6,7 +6,11 @@ import { homeRouterApp } from './routes/home.routes';
 import { favouritesRouterApp } from './routes/favourites.routes';
 import { authRouterApp } from './routes/auth.routes';
 import { ordersRouterApp } from './routes/orders.routes';
+
+import { cartRouterApp } from './routes/cart.routes';
+
 import cookieParser from 'cookie-parser';
+
 
 const app = express();
 
@@ -29,6 +33,7 @@ app.use('/users', userRouterApp);
 app.use('/home', homeRouterApp);
 app.use('/favourites', favouritesRouterApp);
 app.use('/orders', ordersRouterApp);
+app.use('/cart', cartRouterApp);
 
 app.use('/', authRouterApp);
 
