@@ -14,7 +14,7 @@ function sign(user: NormalizedUser) {
     throw new Error('JWT_KEY is not defined in environment variables');
   }
 
-  const token = jwt.sign(user, secretKey, { expiresIn: '5s' });
+  const token = jwt.sign(user, secretKey, { expiresIn: '5000s' });
 
   return token;
 }
