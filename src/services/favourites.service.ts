@@ -1,12 +1,6 @@
-import { Product } from '@prisma/client';
+import { Product, ProductDetails } from '@prisma/client';
 
 import prisma from '../utils/db.ts';
-
-// export const getAll = async (): Promise<Product[]> => {
-//   const result = await prisma.product.findMany();
-
-//   return result;
-// };
 
 export const addFavourite = async (
   userId: number,
@@ -18,7 +12,9 @@ export const addFavourite = async (
   });
 };
 
-export const getAllForUser = async (userId: number): Promise<Product[]> => {
+export const getAllForUser = async (
+  userId: number,
+): Promise<(Product & { details: ProductDetails[] })[]> => {
   const user = await prisma.user.findUnique({
     where: { id: +userId },
     select: { favourites: true },
@@ -31,6 +27,9 @@ export const getAllForUser = async (userId: number): Promise<Product[]> => {
   const products = await prisma.product.findMany({
     where: {
       id: { in: user.favourites.map(id => Number(id)) },
+    },
+    include: {
+      details: true,
     },
   });
 
