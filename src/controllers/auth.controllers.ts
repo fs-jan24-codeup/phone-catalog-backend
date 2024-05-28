@@ -22,6 +22,7 @@ const register = async (req: Request, res: Response) => {
         name,
         password: hashedPass,
         activationToken,
+        favourites: [],
       },
     });
 
