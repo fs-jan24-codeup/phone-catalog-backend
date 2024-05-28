@@ -11,8 +11,6 @@ import { Status } from '../types/constants.ts';
 const register = async (req: Request, res: Response) => {
   const { email, password, name = '' } = req.body;
 
-  console.log({ email, password, name, body: req.body });
-
   try {
     const activationToken = uuidv4();
     const hashedPass = await bcrypt.hash(password, 10);
@@ -40,7 +38,6 @@ const register = async (req: Request, res: Response) => {
         .status(Status.BAD_REQUEST)
         .json({ error: 'Email already exists' });
     }
-    console.log(error);
 
     res
       .status(Status.INTERNAL_SERVER_ERROR)

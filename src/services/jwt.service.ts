@@ -8,8 +8,6 @@ interface NormalizedUser {
 function sign(user: NormalizedUser) {
   const secretKey = process.env.JWT_KEY;
 
-  console.log(process.env);
-
   if (!secretKey) {
     throw new Error('JWT_KEY is not defined in environment variables');
   }

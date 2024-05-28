@@ -5,7 +5,6 @@ import { Status } from '../types/constants';
 export const getOrders = async (req: Request, res: Response) => {
   try {
     const orders = await orderService.getOrders();
-    console.log(orders);
     res.statusCode = Status.OK;
     res.send(orders);
   } catch {
@@ -24,7 +23,6 @@ export const createOrder = async (req: Request, res: Response) => {
     res.statusCode = Status.CREATED;
     res.send(orders);
   } catch (error) {
-    console.log(error);
     res
       .status(Status.INTERNAL_SERVER_ERROR)
       .send({ error: 'An error occurred while fetching orders' });
