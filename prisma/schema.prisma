@@ -55,7 +55,6 @@ model ProductDetails {
 }
 
 model User {
-<<<<<<< HEAD
   id              Int            @id @default(autoincrement())
   email           String         @unique
   name            String?
@@ -63,18 +62,8 @@ model User {
   activationToken String         @unique
   orders          Order[]
   refreshTokens   RefreshToken[]
-
-  Cart Cart[]
-=======
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  password String
-  activationToken String   @unique
-  orders Order[]
-  refreshTokens  RefreshToken[]
-  favourites     String[]
->>>>>>> 9c70a86d8336e161119de9d52e3693a0cd9ef9c3
+  favourites      String[]
+  Cart            Cart[]
 }
 
 model Order {
