@@ -14,63 +14,64 @@ datasource db {
 }
 
 model Product {
-  id                 Int              @id @default(autoincrement())
-  itemId             String           @unique
-  name               String
-  category           String
-  fullPrice          Float
-  price              Float
-  screen             String?
-  capacity           String?
-  color              String?
-  ram                String?
-  year               Int?
-  image              String
-  details            ProductDetails[]
-  OrderProduct       OrderProduct[]
-  carts              Cart[]
+  id           Int              @id @default(autoincrement())
+  itemId       String           @unique
+  name         String
+  category     String
+  fullPrice    Float
+  price        Float
+  screen       String?
+  capacity     String?
+  color        String?
+  ram          String?
+  year         Int?
+  image        String
+  details      ProductDetails[]
+  OrderProduct OrderProduct[]
+  carts        Cart[]
 }
 
 model ProductDetails {
-  id                 String           @id              
-  namespaceId        String
-  category           String
-  name               String
-  capacityAvailable  String[]
-  capacity           String
-  priceRegular       Float
-  priceDiscount      Float
-  colorsAvailable    String[]
-  color              String
-  images             String[]
-  description        Json            
-  screen             String
-  resolution         String
-  processor          String
-  ram                String
-  camera             String?
-  zoom               String?
-  cell               String[]
-  Product            Product          @relation(fields: [id], references: [itemId])
+  id                String   @id
+  namespaceId       String
+  category          String
+  name              String
+  capacityAvailable String[]
+  capacity          String
+  priceRegular      Float
+  priceDiscount     Float
+  colorsAvailable   String[]
+  color             String
+  images            String[]
+  description       Json
+  screen            String
+  resolution        String
+  processor         String
+  ram               String
+  camera            String?
+  zoom              String?
+  cell              String[]
+  Product           Product  @relation(fields: [id], references: [itemId])
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  password String
-  activationToken String   @unique
-  orders Order[]
-  refreshTokens  RefreshToken[]
+  id              Int            @id @default(autoincrement())
+  email           String         @unique
+  name            String?
+  password        String
+  activationToken String         @unique
+  orders          Order[]
+  refreshTokens   RefreshToken[]
 
+  Cart Cart[]
 }
 
 model Order {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id        Int            @id @default(autoincrement())
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
   userId    Int
-  user      User      @relation(fields: [userId], references: [id])
+  user      User           @relation(fields: [userId], references: [id])
   products  OrderProduct[]
 }
 
@@ -78,35 +79,27 @@ model OrderProduct {
   orderId   Int
   productId Int
   quantity  Int
-  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@id([orderId, productId])
 }
 
 model Cart {
-  id        Int      @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   userId    Int
   productId Int
-  user      User     @relation(fields: [userId], references: [id])
-  product   Product  @relation(fields: [productId], references: [id])
+  user      User    @relation(fields: [userId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
 }
 
-// model UserCart {
-//   id        Int      @id @default(autoincrement())
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-//   userId User @relation(fields: [userId], references: [id])
-//   productId Product[]
-// }
-
 model RefreshToken {
-  id          Int      @id @default(autoincrement())
-  token       String   @unique
-  userId      Int
-  user        User     @relation(fields: [userId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([userId], name: "idx_user_id")
 }
