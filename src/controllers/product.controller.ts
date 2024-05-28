@@ -80,7 +80,7 @@ export const getPhones = async (req: Request, res: Response) => {
       sortOrder as string,
     );
     res
-      .status(Status.CREATED)
+      .status(Status.OK)
       .send(products.map(prod => normalizeProductDetails(prod)));
   } catch (err) {
     res
@@ -106,7 +106,7 @@ export const getTablets = async (req: Request, res: Response) => {
       sortOrder as string,
     );
     res
-      .status(Status.CREATED)
+      .status(Status.OK)
       .send(products.map(prod => normalizeProductDetails(prod)));
   } catch (err) {
     res
@@ -132,7 +132,7 @@ export const getAccsessories = async (req: Request, res: Response) => {
       sortOrder as string,
     );
     res
-      .status(Status.CREATED)
+      .status(Status.OK)
       .send(products.map(prod => normalizeProductDetails(prod)));
   } catch (err) {
     res

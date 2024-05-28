@@ -6,6 +6,7 @@ import { jwtService } from '../services/jwt.service.ts';
 import prisma from '../utils/db.ts';
 import bcrypt from 'bcrypt';
 import { tokenService } from '../services/token.service.ts';
+import { Status } from '../types/constants.ts';
 
 const register = async (req: Request, res: Response) => {
   const { email, password, name = '' } = req.body;
@@ -27,18 +28,22 @@ const register = async (req: Request, res: Response) => {
     await emailService.sendActivationEmail(email, activationToken);
 
     res
-      .status(201)
+      .status(Status.CREATED)
       .json({ message: 'User registered successfully', user: newUser });
   } catch (error) {
     if (
       error instanceof PrismaClientKnownRequestError &&
       error.code === 'P2002'
     ) {
-      return res.status(400).json({ error: 'Email already exists' });
+      return res
+        .status(Status.BAD_REQUEST)
+        .json({ error: 'Email already exists' });
     }
     console.log(error);
 
-    res.status(500).json({ error: 'Could not register user' });
+    res
+      .status(Status.INTERNAL_SERVER_ERROR)
+      .json({ error: 'Could not register user' });
   }
 };
 
@@ -62,13 +67,15 @@ const login = async (req: Request, res: Response) => {
   });
 
   if (!user) {
-    return res.status(404).json({ error: 'User not found' });
+    return res.status(Status.NOT_FOUND).json({ error: 'User not found' });
   }
 
   const isPasswordValid = await bcrypt.compare(password, user.password);
 
   if (!isPasswordValid) {
-    return res.status(404).json({ error: 'Incorrect email or password' });
+    return res
+      .status(Status.NOT_FOUND)
+      .json({ error: 'Incorrect email or password' });
   }
 
   generateToken(res, user);
@@ -82,7 +89,6 @@ const refresh = async (req: Request, res: Response) => {
 
   if (!user || !token) {
     throw new Error('Unauthorized');
-    return;
   }
 
   generateToken(res, user);
@@ -114,7 +120,6 @@ const logout = async (req: Request, res: Response) => {
 
   if (!user || !refreshToken) {
     throw new Error('Unauthorized');
-    return;
   }
 
   if (typeof user === 'object' && user !== null && 'id' in user) {
@@ -122,7 +127,7 @@ const logout = async (req: Request, res: Response) => {
     await tokenService.remove(userId);
   }
 
-  res.sendStatus(204);
+  res.sendStatus(Status.NO_CONTENT);
 };
 
 export const authController = {
